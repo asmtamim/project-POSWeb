@@ -1,0 +1,63 @@
+﻿@model PagedList.IPagedList<POSWeb.App.Models.Customer>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Customer";
+    var slNo = (Model.PageNumber - 1) * Model.PageSize + 1;
+}
+
+<br />
+<h3>List of Customers</h3>
+<hr />
+
+<p>
+    @Html.ActionLink("Create New", "Create", "", new { @class = "btn btn-sm btn-secondary" })
+</p>
+<br />
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th style="text-align :center">No.</th>
+            <th style="text-align :center">Customer Name</th>
+            <th style="text-align :center">Phone Number</th>
+            <th style="text-align :center">Email ID</th>
+            <th style="text-align :center">Created On</th>
+            <th style="text-align :center"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="text-align :center">@slNo</td>
+                <td style="text-align :center">
+                    @Html.DisplayFor(modelItem => item.customerName)
+                </td>
+                <td style="text-align :center">
+                    @Html.DisplayFor(modelItem => item.phone)
+                </td>
+                <td style="text-align :center">
+                    @Html.DisplayFor(modelItem => item.email)
+                </td>
+                <td style="text-align :center">
+                    @item.createdAt.ToString("dd-MMM-yyyy")
+                </td>
+                <td style="text-align :center">
+                    @Html.ActionLink("Edit", "Edit", new { id = item.idCustomer }, new { @class = "btn btn-sm btn-warning" })
+                    @Html.ActionLink("Delete", "Delete", new { id = item.idCustomer }, new { @class = "btn btn-sm btn-danger" })
+                </td>
+            </tr>
+
+            slNo++;
+
+        }
+    </tbody>
+</table>
+
+<br />
+<div class="d-flex justify-content-end">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+</div>
+<br />
+

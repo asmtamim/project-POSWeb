@@ -1,0 +1,49 @@
+﻿@model POSWeb.App.Models.InvoiceViewModel
+
+@{
+    ViewBag.Title = "All Invoices";
+}
+
+<br />
+<h3>All Previous Invoices</h3>
+<hr />
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Invoice ID</th>
+            <th>Customer</th>
+            <th>Date</th>
+            <th>Total Amount</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var invoice in Model.PreviousInvoices)
+        {
+            <tr>
+                <td>@invoice.InvoiceId</td>
+                <td>@invoice.CustomerName</td>
+                <td>@invoice.InvoiceDate.ToShortDateString()</td>
+                <td>@invoice.TotalAmount.ToString("C")</td>
+                <td style="text-align:right">
+                    <button type="button" class="btn btn-success btn-sm" onclick="printInvoice('@Url.Action("RptSalesInvoice", new { invoiceId = invoice.InvoiceId })')">Print</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<br />
+<a href="@Url.Action("Index", "Sales")" class="btn btn-sm btn-primary">Back to Sales</a>
+
+<br />
+<br />
+
+<script>
+    function printInvoice(url) {
+        window.open(url, '_blank');
+    }
+</script>
+
+

@@ -1,0 +1,51 @@
+﻿@model POSWeb.App.Models.Customer
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<br />
+<h3>Delete Customer</h3>
+<hr />
+<h4 style="color:red">Are you sure you want to remove this?</h4>
+<br />
+
+<div class="container">
+    <dl class="row">
+        <dt class="col-sm-3">Customer Name</dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.customerName)
+        </dd>
+
+        <dt class="col-sm-3">Phone Number</dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.phone)
+        </dd>
+
+        <dt class="col-sm-3">Email ID</dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.email)
+        </dd>
+
+        <dt class="col-sm-3">Customer Added On</dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.createdAt)
+        </dd>
+    </dl>
+</div>
+<br />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        <input type="submit" value="Delete" class="btn btn-sm btn-danger" />
+        @Html.ActionLink("Back to List", "Index", "", new { @class = "btn btn-sm btn-primary" })
+
+    </div>
+
+}
+<br />
+<br />
+
+

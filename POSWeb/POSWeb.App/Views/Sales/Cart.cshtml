@@ -1,0 +1,90 @@
+﻿@model POSWeb.App.Models.CartViewModel
+
+@{
+    ViewBag.Title = "Cart";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<br />
+<h3>Selected Product For Sale</h3>
+<hr />
+<br />
+
+<table class="table table-striped">
+    <tr>
+        <th>Product Name</th>
+        <th>Unit Price</th>
+        <th>Quantity</th>
+        <th>Total Price</th>
+    </tr>
+
+    @if (Model.Sales.Any())
+    {
+        var sale = Model.Sales.First();
+        <tr>
+            <td>@sale.ProductName</td>
+            <td>@sale.UnitPrice</td>
+            <td>@sale.Quantity</td>
+            <th>@sale.TotalPrice</th>
+        </tr>
+    }
+
+</table>
+
+<br />
+
+<div class="form-group">
+    <label for="ddlCustomer" class="control-label" style="font-weight:bold">Select Customer</label>
+    <div class="form-group row">
+
+        <div class="col-md-3">
+            <select name="SelectedCustomerId" id="ddlCustomer" class="form-control" required>
+                <option value="">Select a Customer</option>
+                @foreach (var customer in Model.Customers)
+                {
+                    <option value="@customer.Value">@customer.Text</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            @Html.ActionLink("New Customer?", "Create", "Customers", new { area = "" }, new { @class = "btn btn-warning", target = "_blank" })
+        </div>
+
+        <div class="col-md-6 d-flex justify-content-end">
+            @using (Html.BeginForm("CompleteSale", "Sales", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" name="productId" value="@Model.Sales.First().ProductId" />
+                <input type="hidden" name="quantity" value="@Model.Sales.First().Quantity" />
+                <input type="hidden" name="customerId" value="" id="hiddenCustomerId" />
+                <button type="submit" class="btn btn-success">Complete Sale</button>
+            }
+        </div>
+
+    </div>
+</div>
+
+<br />
+<br />
+
+<a href="@Url.Action("Index", "Sales")" class="btn btn-sm btn-primary">Back to Sales</a>
+
+<br />
+<br />
+
+<script>
+    $(document).ready(function () {
+        $('form').on('submit', function (event) {
+            var selectedCustomerId = $('#ddlCustomer').val();
+            $('#hiddenCustomerId').val(selectedCustomerId);
+
+            if (!selectedCustomerId) {
+                alert("Please select a customer before proceeding!");
+                event.preventDefault();
+            }
+        });
+    });
+</script>

@@ -1,0 +1,88 @@
+﻿@model IEnumerable<POSWeb.App.Models.Product>
+
+@{
+    ViewBag.Title = "Sales";
+}
+
+<br />
+<h3>Sale</h3>
+<hr />
+<br />
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @Html.ValidationSummary()
+    </div>
+}
+
+<div>
+    @using (Html.BeginForm("Index", "Sales", FormMethod.Get))
+    {
+        <div class="input-group">
+            <input type="text" name="searchStr" placeholder="Search Products" class="form-control" style="width: 300px;" />
+            <input type="submit" value="Search" class="btn btn-secondary ml-2" />
+        </div>
+    }
+</div>
+<br />
+
+<table class="table table-striped">
+    <tr>
+        <th>No.</th>
+        <th>Product Name</th>
+        <th>Available Qty</th>
+        <th>Price</th>
+        <th>Quantity</th>
+    </tr>
+
+    @for (int i = 0; i < Model.Count(); i++)
+    {
+        var product = Model.ElementAt(i);
+        <tr>
+            <td>@(i + 1)</td>
+            <td>@Html.DisplayFor(modelItem => product.productName)</td>
+            <td>@Html.DisplayFor(modelItem => product.stockQty)</td>
+            <td>@Html.DisplayFor(modelItem => product.price)</td>
+            <td>
+                @using (Html.BeginForm("ProceedToCart", "Sales", FormMethod.Post, new { onsubmit = "return validateQty(this);" }))
+                {
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <input type="number" name="quantity" min="0" value="" class="form-control form-control-sm" style="width: 90px; display: inline-block;" data-stock="@product.stockQty" />
+                        </div>
+                        <div class="col-md-6 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-sm btn-primary" name="selectedProduct" value="@product.idProduct">Proceed to Cart</button>
+                        </div>
+                    </div>
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+<br />
+<br />
+
+<script>
+    function validateQty(form) {
+        var input = form.querySelector('input[name="quantity"]');
+        var stockQty = parseInt(input.getAttribute('data-stock'));
+        var selectedQty = parseInt(input.value);
+
+        if (isNaN(selectedQty) || selectedQty < 1) {
+            alert('Minimum Selling Quantity is 1.');
+            input.focus();
+            return false;
+        }
+
+        if (selectedQty > stockQty) {
+            alert('Insufficient stock! Available quantity: ' + stockQty);
+            input.value = '';
+            input.focus();
+            return false;
+        }
+
+        return true;
+    }
+</script>

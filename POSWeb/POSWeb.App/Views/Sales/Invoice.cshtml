@@ -1,0 +1,64 @@
+﻿@model POSWeb.App.Models.InvoiceViewModel
+
+@{
+    ViewBag.Title = "Invoice";
+}
+
+<br />
+<h3>Invoice</h3>
+<hr />
+<br />
+
+<div>
+    <table class="table table-striped">
+        @if (Model.PreviousInvoices.Any())
+        {
+            var invoice = Model.PreviousInvoices[0];
+            <tr>
+                <td><b>Invoice ID</b></td>
+                <td>@invoice.InvoiceId</td>
+            </tr>
+            <tr>
+                <td><b>Customer Name</b></td>
+                <td>@invoice.CustomerName</td>
+            </tr>
+            <tr>
+                <td><b>Invoice Date</b></td>
+                <td>@invoice.InvoiceDate.ToShortDateString()</td>
+            </tr>
+            <tr>
+                <td><b>Total Amount</b></td>
+                <td>@invoice.TotalAmount.ToString("C")</td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td colspan="2" style="color:red">No invoice details available.</td>
+            </tr>
+        }
+    </table>
+</div>
+
+<br />
+
+<div class="form-group row">
+    <div class="col-md-6">
+        @Html.ActionLink("Back to Sales", "Index", "Sales", new { area = "" }, new { @class = "btn btn-primary" })
+    </div>
+    <div class="col-md-6 d-flex justify-content-end">
+        @if (Model.PreviousInvoices.Any())
+        {
+            <button type="button" class="btn btn-success btn-sm" onclick="printInvoice('@Url.Action("RptSalesInvoice", new { invoiceId = Model.PreviousInvoices[0].InvoiceId })')">Print Invoice</button>
+        }
+    </div>
+</div>
+
+<br />
+<br />
+
+<script>
+    function printInvoice(url) {
+        window.open(url, '_blank');
+    }
+</script>
